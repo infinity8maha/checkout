@@ -15,11 +15,11 @@ if %errorlevel% equ 0 (
 
 echo.
 echo Running Spring Boot application...
-echo Note: The application will keep running and show "80%% EXECUTING". This is normal.
 echo You can access the application at: http://localhost:8080/api/swagger-ui.html
 echo Press Ctrl+C to stop the application when you want to exit.
 echo.
 
-call gradlew.bat bootRun
+REM Suppress all progress indicators and execution percentage
+call gradlew.bat bootRun --console=plain --quiet
 
 pause 
