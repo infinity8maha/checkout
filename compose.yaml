@@ -1,1 +1,25 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: checkout_db
+      POSTGRES_USER: checkout_user
+      POSTGRES_PASSWORD: checkout_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/checkout_db
+      SPRING_DATASOURCE_USERNAME: checkout_user
+      SPRING_DATASOURCE_PASSWORD: checkout_pass
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
