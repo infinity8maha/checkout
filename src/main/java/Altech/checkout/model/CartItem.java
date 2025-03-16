@@ -38,7 +38,11 @@ public class CartItem {
 
     @PrePersist
     @PreUpdate
-    protected void calculateTotalPrice() {
+    protected void onPersistOrUpdate() {
+        calculateTotalPrice();
+    }
+    
+    public void calculateTotalPrice() {
         if (quantity != null && unitPrice != null) {
             totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
             if (discountAmount != null) {

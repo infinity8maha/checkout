@@ -11,25 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URLS = {
-        "/api/swagger-ui/**",
-        "/api/swagger-ui.html",
-        "/api/v3/api-docs/**",
-        "/api/test/**",
-        "/swagger-ui/**",
-        "/swagger-ui.html",
-        "/v3/api-docs/**",
-        "/test/**"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .cors(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(WHITE_LIST_URLS).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()  // 允許所有請求，不需要認證
             );
         
         return http.build();
