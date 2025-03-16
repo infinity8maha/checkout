@@ -19,7 +19,7 @@ echo You can access the application at: http://localhost:8080/api/swagger-ui.htm
 echo Press Ctrl+C to stop the application when you want to exit.
 echo.
 
-REM 确保在正确的目录中执行，并使用完整路径
+REM Ensure execution in the correct directory and use full path
 cd %~dp0
 REM Suppress all progress indicators and execution percentage
 call .\gradlew.bat bootRun --console=plain --quiet
