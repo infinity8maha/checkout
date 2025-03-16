@@ -28,10 +28,15 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: method
     disable-swagger-default-url: true
+    use-root-path: true
+    url: /v3/api-docs
   api-docs:
     path: /v3/api-docs
+    groups:
+      enabled: true
   show-actuator: false
   packages-to-scan: Altech.checkout.controller
+  pathsToMatch: /**
 
 server:
   port: 8080

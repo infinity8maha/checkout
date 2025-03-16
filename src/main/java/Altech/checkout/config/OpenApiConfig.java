@@ -20,6 +20,6 @@ public class OpenApiConfig {
                         .contact(new Contact()
                                 .name("API Support")
                                 .email("support@example.com")))
-                .addServersItem(new Server().url("/").description("Default Server URL"));
+                .addServersItem(new Server().url("/api").description("Default Server URL"));
     }
 } 
