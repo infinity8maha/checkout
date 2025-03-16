@@ -33,6 +33,7 @@ dependencies {
 	// Database
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql:10.8.1'
 	
 	// Utils
 	compileOnly 'org.projectlombok:lombok'
@@ -40,6 +41,7 @@ dependencies {
 	
 	// Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-common:2.3.0'
 	
 	// Development
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
