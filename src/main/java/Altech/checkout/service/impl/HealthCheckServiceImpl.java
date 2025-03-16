@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 健康检查服务实现类
+ * Health Check Service Implementation
  */
 @Service
 public class HealthCheckServiceImpl implements HealthCheckService {
@@ -24,21 +24,21 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         Map<String, Object> components = new HashMap<>();
         boolean isSystemHealthy = true;
         
-        // 检查数据库连接
+        // Check database connection
         boolean isDatabaseConnected = isDatabaseConnected();
         components.put("database", Map.of(
             "status", isDatabaseConnected ? "UP" : "DOWN",
-            "details", isDatabaseConnected ? "数据库连接正常" : "无法连接到数据库"
+            "details", isDatabaseConnected ? "Database connection normal" : "Unable to connect to database"
         ));
         isSystemHealthy &= isDatabaseConnected;
         
-        // 检查API服务
+        // Check API service
         components.put("api", Map.of(
             "status", "UP",
-            "details", "API服务正常运行"
+            "details", "API service running normally"
         ));
         
-        // 检查应用程序内存
+        // Check application memory
         Runtime runtime = Runtime.getRuntime();
         long freeMemory = runtime.freeMemory() / (1024 * 1024);
         long totalMemory = runtime.totalMemory() / (1024 * 1024);
@@ -48,7 +48,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             "freeMemory", freeMemory + "MB",
             "totalMemory", totalMemory + "MB",
             "maxMemory", maxMemory + "MB",
-            "details", "内存使用正常"
+            "details", "Memory usage normal"
         ));
         
         response.put("status", isSystemHealthy ? "UP" : "DOWN");
@@ -65,38 +65,38 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         Map<String, Object> components = new HashMap<>();
         boolean isSystemHealthy = true;
         
-        // 基本健康状态检查
+        // Basic health status check
         boolean isDatabaseConnected = isDatabaseConnected();
         components.put("database", Map.of(
             "status", isDatabaseConnected ? "UP" : "DOWN",
-            "details", isDatabaseConnected ? "数据库连接正常" : "无法连接到数据库"
+            "details", isDatabaseConnected ? "Database connection normal" : "Unable to connect to database"
         ));
         isSystemHealthy &= isDatabaseConnected;
         
-        // 检查关键表是否可访问
+        // Check if key tables are accessible
         if (isDatabaseConnected) {
-            // 检查产品表
+            // Check products table
             Map<String, Object> productTableStatus = checkTableAccess("products");
             components.put("products_table", productTableStatus);
             isSystemHealthy &= "UP".equals(productTableStatus.get("status"));
             
-            // 检查购物车表
+            // Check carts table
             Map<String, Object> cartTableStatus = checkTableAccess("carts");
             components.put("carts_table", cartTableStatus);
             isSystemHealthy &= "UP".equals(cartTableStatus.get("status"));
             
-            // 检查购物车项表
+            // Check cart items table
             Map<String, Object> cartItemsTableStatus = checkTableAccess("cart_items");
             components.put("cart_items_table", cartItemsTableStatus);
             isSystemHealthy &= "UP".equals(cartItemsTableStatus.get("status"));
             
-            // 检查折扣表
+            // Check discounts table
             Map<String, Object> discountTableStatus = checkTableAccess("discounts");
             components.put("discounts_table", discountTableStatus);
             isSystemHealthy &= "UP".equals(discountTableStatus.get("status"));
         }
         
-        // 系统信息
+        // System information
         Map<String, Object> systemInfo = new HashMap<>();
         Runtime runtime = Runtime.getRuntime();
         systemInfo.put("processors", runtime.availableProcessors());
@@ -107,7 +107,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         systemInfo.put("osName", System.getProperty("os.name"));
         systemInfo.put("osVersion", System.getProperty("os.version"));
         
-        // 获取磁盘空间信息
+        // Get disk space information
         try {
             java.io.File file = new java.io.File(".");
             long totalSpace = file.getTotalSpace() / (1024 * 1024 * 1024);
@@ -124,7 +124,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         components.put("system", Map.of(
             "status", "UP",
             "info", systemInfo,
-            "details", "系统资源正常"
+            "details", "System resources normal"
         ));
         
         response.put("status", isSystemHealthy ? "UP" : "DOWN");
@@ -152,12 +152,12 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             return Map.of(
                 "status", "UP",
                 "count", count,
-                "details", tableName + "表可访问"
+                "details", tableName + " table accessible"
             );
         } catch (DataAccessException e) {
             return Map.of(
                 "status", "DOWN",
-                "details", tableName + "表访问失败: " + e.getMessage()
+                "details", tableName + " table access failed: " + e.getMessage()
             );
         }
     }

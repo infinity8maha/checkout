@@ -13,15 +13,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/test")
-@Tag(name = "测试接口", description = "用于测试系统和健康检查")
+@Tag(name = "Test API", description = "For system testing and health check")
 public class TestController {
 
     @Autowired
     private HealthCheckService healthCheckService;
 
     @Operation(
-        summary = "测试接口",
-        description = "返回一个简单的问候消息，用于测试 Swagger UI 是否正常工作"
+        summary = "Test API",
+        description = "Returns a simple greeting message to test if Swagger UI is working properly"
     )
     @GetMapping("/hello")
     public String hello() {
@@ -29,8 +29,8 @@ public class TestController {
     }
     
     @Operation(
-        summary = "健康检查接口",
-        description = "执行系统健康检查，检查各组件是否正常工作"
+        summary = "Health Check API",
+        description = "Performs system health check to verify all components are working properly"
     )
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> healthCheck() {
@@ -39,8 +39,8 @@ public class TestController {
     }
     
     @Operation(
-        summary = "详细健康检查接口",
-        description = "执行详细的系统健康检查，包括数据库表检查和系统资源状态"
+        summary = "Detailed Health Check API",
+        description = "Performs detailed system health check including database table checks and system resource status"
     )
     @GetMapping("/health/detail")
     public ResponseEntity<Map<String, Object>> detailedHealthCheck() {

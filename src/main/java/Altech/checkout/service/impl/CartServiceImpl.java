@@ -56,24 +56,24 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCartById(cartId);
         Product product = productService.getProductById(productId);
         
-        // 检查库存
+        // Check stock
         if (product.getStock() < quantity) {
             throw new IllegalArgumentException("Not enough stock available for product: " + product.getName());
         }
         
-        // 检查购物车中是否已有该商品
+        // Check if the product is already in the cart
         Optional<CartItem> existingItem = cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst();
         
         if (existingItem.isPresent()) {
-            // 更新现有商品数量
+            // Update existing item quantity
             CartItem item = existingItem.get();
             item.setQuantity(item.getQuantity() + quantity);
             item.setUnitPrice(product.getPrice());
             item.calculateTotalPrice();
         } else {
-            // 添加新商品到购物车
+            // Add new item to cart
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
             newItem.setProduct(product);
@@ -83,10 +83,10 @@ public class CartServiceImpl implements CartService {
             cart.getItems().add(newItem);
         }
         
-        // 更新购物车总金额
+        // Update cart total amount
         updateCartTotal(cart);
         
-        // 更新产品库存
+        // Update product stock
         product.setStock(product.getStock() - quantity);
         productService.updateProduct(product.getId(), product);
         
@@ -103,15 +103,15 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Cart item not found with id: " + cartItemId));
         
-        // 恢复产品库存
+        // Restore product stock
         Product product = itemToRemove.getProduct();
         product.setStock(product.getStock() + itemToRemove.getQuantity());
         productService.updateProduct(product.getId(), product);
         
-        // 从购物车中移除商品
+        // Remove item from cart
         cart.getItems().remove(itemToRemove);
         
-        // 更新购物车总金额
+        // Update cart total amount
         updateCartTotal(cart);
         
         return cartRepository.save(cart);
@@ -129,23 +129,23 @@ public class CartServiceImpl implements CartService {
         
         Product product = itemToUpdate.getProduct();
         
-        // 计算库存变化
+        // Calculate stock change
         int stockChange = itemToUpdate.getQuantity() - quantity;
         
-        // 检查库存是否足够
+        // Check if stock is sufficient
         if (stockChange < 0 && product.getStock() < Math.abs(stockChange)) {
             throw new IllegalArgumentException("Not enough stock available for product: " + product.getName());
         }
         
-        // 更新商品数量
+        // Update item quantity
         itemToUpdate.setQuantity(quantity);
         itemToUpdate.calculateTotalPrice();
         
-        // 更新产品库存
+        // Update product stock
         product.setStock(product.getStock() + stockChange);
         productService.updateProduct(product.getId(), product);
         
-        // 更新购物车总金额
+        // Update cart total amount
         updateCartTotal(cart);
         
         return cartRepository.save(cart);
@@ -161,28 +161,28 @@ public class CartServiceImpl implements CartService {
                 .filter(d -> d.getEndDate() == null || d.getEndDate().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
         
-        // 重置所有折扣
+        // Reset all discounts
         cart.getItems().forEach(item -> {
             item.setAppliedDiscount(null);
             item.setDiscountAmount(BigDecimal.ZERO);
             item.calculateTotalPrice();
         });
         
-        // 按产品分组
+        // Group by product
         Map<Product, List<CartItem>> itemsByProduct = cart.getItems().stream()
                 .collect(Collectors.groupingBy(CartItem::getProduct));
         
-        // 应用折扣
+        // Apply discounts
         for (Map.Entry<Product, List<CartItem>> entry : itemsByProduct.entrySet()) {
             Product product = entry.getKey();
             List<CartItem> items = entry.getValue();
             
-            // 计算该产品的总数量
+            // Calculate total quantity of the product
             int totalQuantity = items.stream()
                     .mapToInt(CartItem::getQuantity)
                     .sum();
             
-            // 找到适用的最佳折扣
+            // Find the best applicable discount
             Discount bestDiscount = findBestDiscount(activeDiscounts, totalQuantity);
             
             if (bestDiscount != null) {
@@ -190,7 +190,7 @@ public class CartServiceImpl implements CartService {
             }
         }
         
-        // 更新购物车总金额
+        // Update cart total amount
         updateCartTotal(cart);
         
         return cartRepository.save(cart);
@@ -200,7 +200,7 @@ public class CartServiceImpl implements CartService {
     public Map<String, Object> generateReceipt(Long cartId) {
         Cart cart = getCartById(cartId);
         
-        // 应用折扣
+        // Apply discounts
         applyDiscounts(cartId);
         
         Map<String, Object> receipt = new HashMap<>();
@@ -235,7 +235,7 @@ public class CartServiceImpl implements CartService {
         return receipt;
     }
     
-    // 辅助方法
+    // Helper methods
     
     private void updateCartTotal(Cart cart) {
         BigDecimal total = cart.getItems().stream()
@@ -257,20 +257,20 @@ public class CartServiceImpl implements CartService {
         
         switch (discount.getType()) {
             case PERCENTAGE:
-                // 百分比折扣
+                // Percentage discount
                 value = discount.getValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 break;
             case FIXED_AMOUNT:
-                // 固定金额折扣
+                // Fixed amount discount
                 value = discount.getValue();
                 break;
             case BUY_X_GET_Y_FREE:
-                // 买X送Y
+                // Buy X get Y free
                 int freeItems = quantity / (discount.getMinQuantity() + 1);
                 value = BigDecimal.valueOf(freeItems);
                 break;
             case SECOND_UNIT_PERCENTAGE:
-                // 第二件打折
+                // Second unit discount
                 if (quantity >= 2) {
                     value = discount.getValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 }
@@ -283,7 +283,7 @@ public class CartServiceImpl implements CartService {
     private void applyDiscountToItems(List<CartItem> items, Discount discount, int totalQuantity) {
         switch (discount.getType()) {
             case PERCENTAGE:
-                // 百分比折扣
+                // Percentage discount
                 for (CartItem item : items) {
                     BigDecimal discountRate = discount.getValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     BigDecimal originalTotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
@@ -296,7 +296,7 @@ public class CartServiceImpl implements CartService {
                 break;
                 
             case FIXED_AMOUNT:
-                // 固定金额折扣 - 按比例分配到每个商品
+                // Fixed amount discount - proportionally distributed to each item
                 BigDecimal totalOriginalPrice = items.stream()
                         .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -313,15 +313,15 @@ public class CartServiceImpl implements CartService {
                 break;
                 
             case BUY_X_GET_Y_FREE:
-                // 买X送Y
+                // Buy X get Y free
                 int minQuantity = discount.getMinQuantity();
                 int freeItems = totalQuantity / (minQuantity + 1);
                 
                 if (freeItems > 0) {
-                    // 按比例分配免费商品
+                    // Distribute free items proportionally
                     int remainingFreeItems = freeItems;
                     
-                    // 按数量排序，优先给数量多的商品应用折扣
+                    // Sort by quantity, prioritize items with higher quantities for discounts
                     List<CartItem> sortedItems = new ArrayList<>(items);
                     sortedItems.sort(Comparator.comparing(CartItem::getQuantity).reversed());
                     
@@ -341,15 +341,15 @@ public class CartServiceImpl implements CartService {
                 break;
                 
             case SECOND_UNIT_PERCENTAGE:
-                // 第二件打折
+                // Second unit discount
                 if (totalQuantity >= 2) {
                     int discountedItems = totalQuantity / 2;
                     BigDecimal discountRate = discount.getValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     
-                    // 按比例分配折扣商品
+                    // Distribute discounted items proportionally
                     int remainingDiscountedItems = discountedItems;
                     
-                    // 按数量排序，优先给数量多的商品应用折扣
+                    // Sort by quantity, prioritize items with higher quantities for discounts
                     List<CartItem> sortedItems = new ArrayList<>(items);
                     sortedItems.sort(Comparator.comparing(CartItem::getQuantity).reversed());
                     

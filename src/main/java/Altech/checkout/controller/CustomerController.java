@@ -17,15 +17,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/customer")
 @RequiredArgsConstructor
-@Tag(name = "客戶操作", description = "客戶專用API")
+@Tag(name = "Customer Operations", description = "APIs for Customers")
 public class CustomerController {
     private final ProductService productService;
     private final CartService cartService;
 
-    // 产品浏览
+    // Product Browsing
     @Operation(
-        summary = "獲取所有產品",
-        description = "客戶獲取所有可用產品的列表"
+        summary = "Get All Products",
+        description = "Customers can get a list of all available products"
     )
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -33,18 +33,18 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "獲取產品詳情",
-        description = "客戶根據ID獲取產品詳情"
+        summary = "Get Product Details",
+        description = "Customers can get product details by ID"
     )
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    // 购物车操作
+    // Cart Operations
     @Operation(
-        summary = "創建購物車",
-        description = "客戶創建一個新的購物車"
+        summary = "Create Cart",
+        description = "Customers can create a new shopping cart"
     )
     @PostMapping("/cart")
     public ResponseEntity<Cart> createCart() {
@@ -52,8 +52,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "獲取所有購物車",
-        description = "獲取所有購物車（用於管理和測試）"
+        summary = "Get All Carts",
+        description = "Get all shopping carts (for administration and testing)"
     )
     @GetMapping("/carts")
     public ResponseEntity<List<Cart>> getAllCarts() {
@@ -61,8 +61,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "獲取購物車",
-        description = "客戶根據ID獲取購物車詳情"
+        summary = "Get Cart",
+        description = "Customers can get cart details by ID"
     )
     @GetMapping("/cart/{id}")
     public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
@@ -70,8 +70,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "刪除購物車",
-        description = "刪除指定ID的購物車（用於管理和測試）"
+        summary = "Delete Cart",
+        description = "Delete a cart by ID (for administration and testing)"
     )
     @DeleteMapping("/cart/{id}")
     public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
@@ -80,8 +80,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "添加商品到購物車",
-        description = "客戶向購物車中添加商品"
+        summary = "Add Item to Cart",
+        description = "Customers can add items to their cart"
     )
     @PostMapping("/cart/{cartId}/items")
     public ResponseEntity<Cart> addItemToCart(
@@ -92,8 +92,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "從購物車中移除商品",
-        description = "客戶從購物車中移除指定的商品"
+        summary = "Remove Item from Cart",
+        description = "Customers can remove items from their cart"
     )
     @DeleteMapping("/cart/{cartId}/items/{itemId}")
     public ResponseEntity<Cart> removeItemFromCart(
@@ -103,8 +103,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "更新購物車商品數量",
-        description = "客戶更新購物車中商品的數量"
+        summary = "Update Cart Item Quantity",
+        description = "Customers can update the quantity of items in their cart"
     )
     @PutMapping("/cart/{cartId}/items/{itemId}")
     public ResponseEntity<Cart> updateCartItemQuantity(
@@ -115,8 +115,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "應用折扣",
-        description = "為購物車中的商品應用折扣"
+        summary = "Apply Discounts",
+        description = "Apply discounts to items in the cart"
     )
     @PostMapping("/cart/{cartId}/apply-discounts")
     public ResponseEntity<Cart> applyDiscounts(@PathVariable Long cartId) {
@@ -124,8 +124,8 @@ public class CustomerController {
     }
 
     @Operation(
-        summary = "生成購物車收據",
-        description = "客戶生成包含所有商品、應用的折扣和總價的收據"
+        summary = "Generate Cart Receipt",
+        description = "Customers can generate a receipt including all items, applied discounts, and total price"
     )
     @GetMapping("/cart/{cartId}/receipt")
     public ResponseEntity<Map<String, Object>> generateReceipt(@PathVariable Long cartId) {

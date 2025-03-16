@@ -16,15 +16,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Tag(name = "管理员操作", description = "管理员专用API")
+@Tag(name = "Admin Operations", description = "APIs for Administrators")
 public class AdminController {
     private final ProductService productService;
     private final DiscountService discountService;
 
-    // 产品管理
+    // Product Management
     @Operation(
-        summary = "创建新产品",
-        description = "管理员创建一个新的产品并保存到数据库"
+        summary = "Create New Product",
+        description = "Admin creates a new product and saves it to the database"
     )
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
@@ -32,8 +32,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "获取所有产品",
-        description = "管理员获取所有产品的列表"
+        summary = "Get All Products",
+        description = "Admin gets a list of all products"
     )
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -41,8 +41,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "根据ID获取产品",
-        description = "管理员根据产品ID获取产品详情"
+        summary = "Get Product by ID",
+        description = "Admin gets product details by product ID"
     )
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
@@ -50,8 +50,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "更新产品",
-        description = "管理员根据ID更新产品信息"
+        summary = "Update Product",
+        description = "Admin updates product information by ID"
     )
     @PutMapping("/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
@@ -59,8 +59,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "删除产品",
-        description = "管理员根据ID删除产品（软删除）"
+        summary = "Delete Product",
+        description = "Admin deletes a product by ID (soft delete)"
     )
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
@@ -68,10 +68,10 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // 折扣管理
+    // Discount Management
     @Operation(
-        summary = "创建新折扣",
-        description = "管理员创建一个新的折扣并保存到数据库"
+        summary = "Create New Discount",
+        description = "Admin creates a new discount and saves it to the database"
     )
     @PostMapping("/discounts")
     public ResponseEntity<Discount> createDiscount(@RequestBody Discount discount) {
@@ -79,8 +79,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "获取所有折扣",
-        description = "管理员获取所有折扣的列表"
+        summary = "Get All Discounts",
+        description = "Admin gets a list of all discounts"
     )
     @GetMapping("/discounts")
     public ResponseEntity<List<Discount>> getAllDiscounts() {
@@ -88,8 +88,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "根据ID获取折扣",
-        description = "管理员根据折扣ID获取折扣详情"
+        summary = "Get Discount by ID",
+        description = "Admin gets discount details by discount ID"
     )
     @GetMapping("/discounts/{id}")
     public ResponseEntity<Discount> getDiscountById(@PathVariable Long id) {
@@ -97,8 +97,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "更新折扣",
-        description = "管理员根据ID更新折扣信息"
+        summary = "Update Discount",
+        description = "Admin updates discount information by ID"
     )
     @PutMapping("/discounts/{id}")
     public ResponseEntity<Discount> updateDiscount(@PathVariable Long id, @RequestBody Discount discount) {
@@ -106,8 +106,8 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "删除折扣",
-        description = "管理员根据ID删除折扣（软删除）"
+        summary = "Delete Discount",
+        description = "Admin deletes a discount by ID (soft delete)"
     )
     @DeleteMapping("/discounts/{id}")
     public ResponseEntity<Void> deleteDiscount(@PathVariable Long id) {
